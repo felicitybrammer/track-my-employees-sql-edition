@@ -1,33 +1,67 @@
 const inquirer = require('inquirer');
 const db = require('./config/connection');
 
+//to display as a table
 const table = require("console.table");
 // throw an error if the user fails to connect
 db.connect((err) => {
     if (err) throw err;
-
 });
 
     //get questions then take answers, invoke handler functions to perform action, then start
-    const questions = () => {
-        return inquirer.prompt([
+    function questions() {
+        inquirer
+            .prompt([
+            //first menu 
             {
                 type: 'list',
                 name: 'main',
                 message: 'What would you like to do?',
                 choices: [
-                    'View All Employees',
-                    'View All Employees By Department',
-                    'View All Employees By Manager',
-                    'Add Employee',
-                    'Remove Employee', 
-                    'Update Employee Role',
-                    'Update Employee Manager', 
+                    'View All Departments',
                     'View All Roles',
-                    'Add Role',
-                    'Remove Role'
+                    'View All Employees',
+                    'Add a Department', 
+                    'Add a Role',
+                    'Add an Employee',
+                    'Update an Employee Record',
+                    'Quit'
+                    
                 ]
-            },
+            }
+        ])
+        .then(function (input) {
+            if (input.main === 'View All Departments') {
+                getDept();
+            } else if (input.main === 'View All Roles') {
+                getRole();
+            } else if (input.main === 'View All Employees') {
+                getEmployee();
+            } else if (input.main === 'Add a Department') {
+                addDept();
+            } else if (input.main === 'Add a Role') {
+                addRole();
+            } else if (input.main === 'Add an Employee') {
+                addEmployee();
+            } else if (input.main === 'Update an Employee Record') {
+                update();
+            } else if (input.main === 'Quit') {
+                console.log('Leaving Employee Tracker');
+                db.end();
+                return;
+            }
+        });
+    };
+
+    function getDept() {};
+    function getRole() {};
+    function getEmployee() {};
+    
+    function addDept() {};
+    function addRole() {};
+    function addEmployee() {};
+    function update() {};
+
             {
                 type: 'list',
                 name: 'department',
@@ -107,3 +141,5 @@ db.connect((err) => {
             }
         ]);
     }
+
+questions();
