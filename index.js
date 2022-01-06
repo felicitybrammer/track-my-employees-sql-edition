@@ -142,16 +142,62 @@ db.connect((err) => {
                 {
                     //dept id not name
                     type: 'input',
-                    name: ''
+                    name: 'deptId',
+                    message: 'Please enter the department id'
                 }
             ])
             //and that role is added to the database
+            .then(function (updatedRole) {
+                const sql = `INSERT INTO role (title, salary, department_id)
+                            VALUES ('${updatedRole.role}', '${updatedRole.salary}', '${updatedRole.deptId}')`;
+                
+                db.query(sql, function(err, result) {
+                    if (err) throw err;
+                    console.table(result);
+                    questions();
+                })
+            });
     };
     function addEmployee() {
-        //I am prompted to enter the employee’s first name, last name, role, and manager and that employee is added to the database
+        //I am prompted to enter the employee’s first name, last name, role, and manager 
+        inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'first_name',
+                    message: 'Please enter the first name of the new employee'
+                },
+                {
+                    type: 'input',
+                    name: 'last_name',
+                    message: 'Please enter the last name of the new employee.'
+                },
+                {
+                    type: 'input',
+                    name: 'roleId',
+                    message: "Please enter the role id for this employee."
+                },
+                {
+                    type: 'input',
+                    name: 'managerId',
+                    message: 'Please enter the manager id for this employee'
+                }
+            ])
+        //and that employee is added to the database
+        .then(function (updatedEmployee) {
+            const sql = `INSERT INTO role (title, salary, department_id)
+                        VALUES ('${updatedEmployee.first_name}', '${updatedEmployee.last_name}', '${updatedEmployee.roleId}', '${updatedEmployee.managerId}')`;
+            
+            db.query(sql, function(err, result) {
+                if (err) throw err;
+                console.table(result);
+                questions();
+            })
+        });
     };
     function update() {
         //I am prompted to select an employee to update and their new role and this information is updated in the database 
+        addEmployee();
     };
 
            
