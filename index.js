@@ -6,9 +6,19 @@ const table = require("console.table");
 // throw an error if the user fails to connect
 db.connect((err) => {
     if (err) throw err;
+    console.log('Connected!');
 });
 
-    //get questions then take answers, invoke handler functions to perform action, then start
+// Template:
+// con.connect(function(err) {
+//     if (err) throw err;
+//     console.log("Connected!");
+//     con.query(sql, function (err, result) {
+//       if (err) throw err;
+//       console.log("Result: " + result);
+//     });
+//   });
+//get questions then take answers, invoke handler functions to perform action, then start
     function questions() {
         inquirer
             .prompt([
@@ -53,93 +63,97 @@ db.connect((err) => {
         });
     };
 
-    function getDept() {};
-    function getRole() {};
-    function getEmployee() {};
+    function getDept() {
+        //get formatted table showing all department names and department ids
+        const sql = `SELECT * FROM department;`;
+        db.query(sql, function(err, res) {
+            if (err) throw err;
+            console.table(res);
+            questions();
+        });     
+    };
+    function getRole() {
+        //job title, role id, the department that role belongs to, and the salary for that role
+        const sql = `SELECT role.id, role.title, role.salary, dept.name
+                     FROM role AS role
+                     LEFT JOIN department AS dept
+                     ON dept.id = role.department_id;`;
+        db.query(sql, function(err, res) {
+            if (err) throw err;
+            console.table(res);
+            questions();
+        }) 
+    };
+    function getEmployee() {
+        //formatted table showing employee data, including employee ids, 
+        //first names, last names, job titles, departments, salaries, 
+        //and managers that the employees report to
+        const sql = `SELECT FROM e.*, r.title, r.salary, r.department_id
+                     FROM employee AS e
+                     LEFT JOIN role AS r
+                     ON r.id = e.role_id;`;
+        db.query(sql, function(err, res) {
+            if (err) throw err;
+            console.table(res);
+            questions();
+        });
+    };
     
-    function addDept() {};
-    function addRole() {};
-    function addEmployee() {};
-    function update() {};
+    function addDept() {
+        //I am prompted to enter the name of the department 
+        
+        inquirer    
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'dept',
+                    message: 'Please add the name of the department'
+                }
+            ])
+            //and that department is added to the database
+            .then(function (updatedDept) {
+                const department = updatedDept.dept;
 
-            {
-                type: 'list',
-                name: 'department',
-                choices: ['Engineering', 'Administration', 'Sales', 'Accounting'],
-                message: 'Which department would you like to view?',
-                when: //view all employees by department
-            },
-            {
-                type: 'list',
-                name: 'manager',
-                choices: [''],
-                message: 'Which manager would you like to view?',
-                when: //view all employees by manager
-            },
-            {
-                type: 'input',
-                name: 'first_name',
-                message: "What is the employee's first name?",
-                when: //add employee   
-            },
-            {
-                type: 'input',
-                name: 'last_name',
-                message: "What is the employee's last name?",
-                when: //first name 
-            },
-            {
-                type: 'list',
-                name: 'role',
-                message: "What is the employee's role?",
-                choices: [],
-                when: //last name
-            },
-            {
-                type: 'list',
-                name: 'manager',
-                message: "Who is the employee's manager?",
-                choices: [],
-                when: //role
-            },
-            {
-               type: 'list',
-               name: 'removeEmployee',
-               message: 'Which employee do you want to remove?',
-               choices: [],
-               when: //remove employee 
-            },
-            {
-                type: 'list',
-                name: 'updateEmployee',
-                message: 'Which employee would you like to update?',
-                choices: [],
-                when: //update employee role || update employee manager
-            },
-            
-            {
-                type:
-                name:
-                message: "Who is the employee's new manager?",
-                choices: [],
-                when: // Update Employee Manager
-            },
-            
-        // View All Roles
-            {
-                type: 'input',
-                name: 'addRole',
-                message: 'Which role would you like to add?',
-                when: // Add Role
-            },
-            {
-                type: 'list',
-                name: 'removeRole',
-                message: 'Which role do you want to remove?',
-                choices: [],
-                when: // Remove Role
-            }
-        ]);
-    }
+                const sql = `INSERT INTO department (dept)
+                            VALUES ('${department}')`;
+                
+                db.query(sql, function(err, result) {
+                    if (err) throw err;
+                    console.table(result);
+                    questions();
+                })
+            })
+    };
+
+    function addRole() {
+        //I am prompted to enter the name, salary, and department for the role 
+        inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'role',
+                    message: 'Please enter the name of the new role'
+                },
+                {
+                    type: 'input',
+                    name: 'salary',
+                    message: 'Please enter the salary for this role.'
+                },
+                {
+                    //dept id not name
+                    type: 'input',
+                    name: ''
+                }
+            ])
+            //and that role is added to the database
+    };
+    function addEmployee() {
+        //I am prompted to enter the employee’s first name, last name, role, and manager and that employee is added to the database
+    };
+    function update() {
+        //I am prompted to select an employee to update and their new role and this information is updated in the database 
+    };
+
+           
 
 questions();
