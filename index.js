@@ -121,8 +121,9 @@ db.connect((err) => {
                 
                 db.query(sql, function(err, result) {
                     if (err) throw err;
-                    console.table(result);
-                    questions();
+                    getDept();
+                    // console.table(result);
+                    // questions();
                 })
             })
     };
@@ -155,8 +156,9 @@ db.connect((err) => {
                 
                 db.query(sql, function(err, result) {
                     if (err) throw err;
-                    console.table(result);
-                    questions();
+                    getRole();
+                    // console.table(result);
+                    // questions();
                 })
             });
     };
@@ -167,7 +169,7 @@ db.connect((err) => {
                 {
                     type: 'input',
                     name: 'first_name',
-                    message: 'Please enter the first name of theB employee'
+                    message: 'Please enter the first name of the employee'
                 },
                 {
                     type: 'input',
@@ -190,7 +192,7 @@ db.connect((err) => {
             const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
                         VALUES (?,?,?,?);`;
             const data = [`${updatedEmployee.first_name}`, `${updatedEmployee.last_name}`, `${updatedEmployee.roleId}`, `${updatedEmployee.managerId}`];
-            console.log(sql, data);
+            //console.log(sql, data);
             db.query(sql, data, function(err, result) {
                 if (err) throw err;
                 //console.table(result);
