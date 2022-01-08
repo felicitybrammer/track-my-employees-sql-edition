@@ -17,7 +17,9 @@ A Node.js CLI application using a MySQL database to manage a company's employee 
 
 `npm start` to run the start script
 
-## Demo
+Here is a link to a walkthrough video to shows the content management system in use:
+
+https://drive.google.com/file/d/177WNMp9F7cjJUbRagY3liMQ_JBJeypd8/view
 
 
 
